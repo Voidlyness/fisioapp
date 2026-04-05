@@ -700,6 +700,24 @@ function enterApp() {
   showPage("dashboard");
 }
 
+function getFirebaseLoginErrorMessage(error) {
+  const code = error?.code || "unknown";
+  const messages = {
+    "auth/invalid-email": "O email não é válido.",
+    "auth/missing-password": "Falta indicar a palavra-passe.",
+    "auth/user-not-found": "Este utilizador não existe no Firebase Authentication.",
+    "auth/wrong-password": "A palavra-passe está incorreta.",
+    "auth/invalid-credential": "Credenciais inválidas. Confirma o email e a palavra-passe.",
+    "auth/invalid-login-credentials": "Credenciais inválidas. Confirma o email e a palavra-passe.",
+    "auth/too-many-requests": "Muitas tentativas de login. Tenta novamente daqui a pouco.",
+    "auth/network-request-failed": "Falha de rede ao tentar autenticar.",
+    "auth/operation-not-allowed": "O login por Email/Password não está ativo no Firebase.",
+    "auth/unauthorized-domain": "Este domínio não está autorizado no Firebase Authentication."
+  };
+
+  return messages[code] || `Erro Firebase: ${code}`;
+}
+
 async function doLogin() {
   const email = document.getElementById("login-email").value.trim();
   const pass = document.getElementById("login-pass").value;
@@ -716,8 +734,8 @@ async function doLogin() {
     const { signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
     await signInWithEmailAndPassword(state.auth, email, pass);
   } catch (error) {
-    console.error(error);
-    errorEl.textContent = "Email ou palavra-passe incorretos.";
+    console.error("Firebase login error:", error?.code, error);
+    errorEl.textContent = getFirebaseLoginErrorMessage(error);
     errorEl.style.display = "block";
   }
 }
