@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FisioApp</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1D9E75;
+    --teal-dark: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-border: #9FE1CB;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --danger: #E24B4A;
+    --danger-light: #FCEBEB;
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text-muted: #6b6b68;
+    --text-faint: #a0a09d;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    font-size: 14px;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 210px;
+    min-width: 210px;
+    background: var(--surface);
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0;
+    height: 100vh;
+  }
+
+  .logo {
+    padding: 0 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--teal);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-icon svg { width: 18px; height: 18px; }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    padding: 0.25rem 1.25rem 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .nav-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 1.25rem;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted);
+    background: none; border: none;
+    cursor: pointer; width: 100%; text-align: left;
+    transition: all 0.1s;
+    border-radius: 0;
+  }
+
+  .nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.7; }
+  .nav-btn:hover { background: var(--bg); color: var(--text); }
+  .nav-btn.active { background: var(--teal-light); color: var(--teal-dark); font-weight: 500; }
+  .nav-btn.active svg { opacity: 1; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.25rem;
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 1.5rem;
+    height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .topbar-title { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+
+  .content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 7px 14px; font-size: 13px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: background 0.1s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+
+  .btn:hover { background: var(--bg); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--teal); color: white;
+    border-color: var(--teal);
+  }
+  .btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+
+  .btn-danger { background: var(--danger-light); color: var(--danger); border-color: #f0a0a0; }
+  .btn-danger:hover { background: #fad0d0; }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.25rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+  }
+
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-value { font-size: 26px; font-weight: 600; letter-spacing: -1px; }
+
+  /* ── AGENDA ── */
+  .week-nav {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem;
+  }
+
+  .week-label { font-size: 14px; font-weight: 500; min-width: 180px; text-align: center; }
+
+  .day-grid {
+    display: grid;
+    grid-template-columns: 52px repeat(5, 1fr);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .dg-header {
+    font-size: 11px; font-weight: 600;
+    padding: 9px 6px;
+    text-align: center;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dg-header.today { background: var(--teal-light); color: var(--teal-dark); }
+
+  .dg-time {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-faint);
+    padding: 6px 6px 0 4px;
+    text-align: right;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--surface);
+  }
+
+  .dg-cell {
+    border-left: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    min-height: 52px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .dg-cell:hover { background: #fafaf8; }
+
+  .appt {
+    position: absolute; inset: 3px;
+    border-radius: 7px;
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    overflow: hidden;
+    line-height: 1.4;
+    transition: filter 0.1s;
+  }
+
+  .appt:hover { filter: brightness(0.96); }
+  .appt-teal { background: var(--teal-light); color: #085041; }
+  .appt-amber { background: var(--amber-light); color: #633806; }
+  .appt-red { background: var(--danger-light); color: #791F1F; }
+  .appt-sub { font-weight: 400; opacity: 0.75; font-size: 10px; }
+
+  /* ── PACIENTES TABLE ── */
+  .search-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+
+  .search-input {
+    flex: 1; padding: 8px 12px;
+    font-size: 14px;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .search-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+  .search-input::placeholder { color: var(--text-faint); }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  tbody td {
+    padding: 12px 14px;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #fafaf8; cursor: pointer; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: #EAF3DE; color: #3B6D11; }
+  .badge-amber { background: var(--amber-light); color: #633806; }
+  .badge-gray { background: #EEECE7; color: #5F5E5A; }
+
+  .av-wrap { display: flex; align-items: center; gap: 10px; }
+  .av { width: 32px; height: 32px; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .av-0 { background: var(--teal-light); color: #085041; }
+  .av-1 { background: #E6F1FB; color: #0C447C; }
+  .av-2 { background: #FAECE7; color: #712B13; }
+  .av-3 { background: #EEEDFE; color: #3C3489; }
+  .av-4 { background: #FBEAF0; color: #72243E; }
+
+  /* ── FICHA ── */
+  .ficha-header {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  .ficha-av { width: 54px; height: 54px; border-radius: 50%; background: var(--teal-light); color: #085041; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+
+  .ficha-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .ficha-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+  .ficha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+  }
+
+  .card-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .info-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .info-row:last-child { border-bottom: none; }
+  .info-row span:first-child { color: var(--text-muted); }
+
+  .note-item {
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .note-item:last-child { border-bottom: none; }
+  .note-date { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 4px; font-weight: 500; }
+
+  /* ── MODAL ── */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: center; justify-content: center;
+  }
+
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border-strong);
+    padding: 1.5rem;
+    width: 440px;
+    max-width: 96vw;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1.25rem; letter-spacing: -0.2px; }
+
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 9px 11px;
+    font-size: 14px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.1s;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+  }
+
+  .field textarea { resize: vertical; min-height: 70px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+
+  /* ── FIREBASE STATUS ── */
+  .fb-banner {
+    background: #FFF3CD;
+    border: 0.5px solid #FFDA6A;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #664D03;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+    line-height: 1.5;
+  }
+
+  .fb-banner.success { background: var(--teal-light); border-color: var(--teal-border); color: #085041; }
+  .fb-banner.error { background: var(--danger-light); border-color: #f09595; color: #501313; }
+
+  /* ── CONFIG MODAL ── */
+  .config-section { margin-bottom: 1.25rem; }
+  .config-section h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .config-code {
+    background: #1a1a18; color: #9FE1CB;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 12px;
+    border-radius: var(--radius);
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.6;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 3rem 1rem;
+    color: var(--text-muted);
+  }
+  .empty-state svg { width: 40px; height: 40px; opacity: 0.3; margin-bottom: 1rem; }
+  .empty-state p { font-size: 13px; }
+
+  /* ── LOADING ── */
+  .loading { text-align: center; padding: 2rem; color: var(--text-faint); font-size: 13px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    background: #1a1a18; color: white;
+    padding: 10px 16px; border-radius: var(--radius);
+    font-size: 13px; z-index: 999;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.25s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--teal-dark); }
+  .toast.error { background: var(--danger); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+      </svg>
+    </div>
+    FisioApp
+  </div>
+
+  <div class="nav-label">Menu</div>
+
+  <button class="nav-btn active" id="nav-agenda" onclick="goView('agenda')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    Agenda
+  </button>
+
+  <button class="nav-btn" id="nav-pacientes" onclick="goView('pacientes')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+    Pacientes
+  </button>
+
+  <div style="flex:1"></div>
+
+  <button class="nav-btn" onclick="openConfig()" style="border-top: 0.5px solid var(--border); padding-top: 10px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+    </svg>
+    Configurar Firebase
+  </button>
+
+  <div class="sidebar-footer">
+    <div class="av av-0" style="width:32px;height:32px;font-size:12px;">HF</div>
+    <div>
+      <div style="font-size:13px;font-weight:600;">Hugo</div>
+      <div style="font-size:11px;color:var(--text-muted);">Fisioterapeuta</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ══ AGENDA ══ -->
+  <div id="view-agenda" class="view active">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn btn-sm" onclick="changeWeek(-1)">‹</button>
+        <span class="week-label" id="week-label"></span>
+        <button class="btn btn-sm" onclick="changeWeek(1)">›</button>
+        <button class="btn btn-sm" onclick="goToday()">Hoje</button>
+      </div>
+      <button class="btn btn-primary" onclick="openConsultaModal()">+ Nova consulta</button>
+    </div>
+    <div class="content">
+      <div id="fb-status"></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Esta semana</div><div class="stat-value" id="stat-semana">—</div></div>
+        <div class="stat-card"><div class="stat-label">Hoje</div><div class="stat-value" id="stat-hoje">—</div></div>
+        <div class="stat-card"><div class="stat-label">Pacientes ativos</div><div class="stat-value" id="stat-ativos">—</div></div>
+        <div class="stat-card"><div class="stat-label">Total consultas</div><div class="stat-value" id="stat-total">—</div></div>
+      </div>
+      <div id="agenda-grid"></div>
+    </div>
+  </div>
+
+  <!-- ══ PACIENTES ══ -->
+  <div id="view-pacientes" class="view">
+    <div class="topbar">
+      <span class="topbar-title">Pacientes</span>
+      <button class="btn btn-primary" onclick="openPacienteModal()">+ Novo paciente</button>
+    </div>
+    <div class="content">
+      <div class="search-row">
+        <input class="search-input" type="text" placeholder="Pesquisar nome ou diagnóstico..." oninput="filterPacientes(this.value)" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Diagnóstico</th>
+              <th>Telefone</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="pacientes-tbody">
+            <tr><td colspan="5" class="loading">A carregar...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FICHA ══ -->
+  <div id="view-ficha" class="view">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn btn-sm" onclick="goView('pacientes')">← Voltar</button>
+        <span class="topbar-title" id="ficha-topbar-name">Ficha</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-sm" onclick="openConsultaModal(currentPatientId)">+ Consulta</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePaciente()">Eliminar</button>
+      </div>
+    </div>
+    <div class="content" id="ficha-content"></div>
+  </div>
+
+</div>
+
+<!-- ══ MODAL CONSULTA ══ -->
+<div class="overlay" id="modal-consulta" onclick="if(event.target===this)closeModal('modal-consulta')">
+  <div class="modal">
+    <div class="modal-title" id="consulta-modal-title">Nova consulta</div>
+    <div class="field">
+      <label>Paciente</label>
+      <select id="consulta-paciente"></select>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Data</label>
+        <input type="date" id="consulta-data"/>
+      </div>
+      <div class="field">
+        <label>Hora</label>
+        <input type="time" id="consulta-hora" value="09:00"/>
+      </div>
+    </div>
+    <div class="field">
+      <label>Tipo</label>
+      <select id="consulta-tipo">
+        <option>Seguimento</option>
+        <option>Primeira consulta</option>
+        <option>Reavaliação</option>
+        <option>Alta</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Notas clínicas</label>
+      <textarea id="consulta-notas" placeholder="EVA, progressão, técnicas usadas..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-consulta')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveConsulta()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL PACIENTE ══ -->
+<div class="overlay" id="modal-paciente" onclick="if(event.target===this)closeModal('modal-paciente')">
+  <div class="modal">
+    <div class="modal-title">Novo paciente</div>
+    <div class="form-row">
+      <div class="field"><label>Nome</label><input type="text" id="p-nome" placeholder="Nome completo"/></div>
+      <div class="field"><label>Data de nascimento</label><input type="date" id="p-nasc"/></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Género</label>
+        <select id="p-genero"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select>
+      </div>
+      <div class="field"><label>Telefone</label><input type="tel" id="p-tel" placeholder="9xx xxx xxx"/></div>
+    </div>
+    <div class="field"><label>Email</label><input type="email" id="p-email" placeholder="email@exemplo.pt"/></div>
+    <div class="field"><label>Diagnóstico principal</label><input type="text" id="p-diag" placeholder="ex: Lombalgia crónica"/></div>
+    <div class="form-row">
+      <div class="field"><label>NIF</label><input type="text" id="p-nif" placeholder="123 456 789"/></div>
+      <div class="field"><label>Seguro / subsistema</label><input type="text" id="p-seguro" placeholder="ex: Multicare"/></div>
+    </div>
+    <div class="field"><label>Médico referenciador</label><input type="text" id="p-medico" placeholder="Dr. ..."/></div>
+    <div class="field"><label>Estado</label>
+      <select id="p-estado"><option>Ativo</option><option>Em pausa</option><option>Inativo</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-paciente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePaciente()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL CONFIG FIREBASE ══ -->
+<div class="overlay" id="modal-config" onclick="if(event.target===this)closeModal('modal-config')">
+  <div class="modal" style="width:520px;">
+    <div class="modal-title">Configurar Firebase</div>
+
+    <div class="config-section">
+      <h3>1. Criar projeto Firebase</h3>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+        Vai a <strong>console.firebase.google.com</strong> → Criar projeto → ativa Firestore Database (modo de teste) → vai a Configurações do projeto → Adicionar app Web → copia o objeto <code>firebaseConfig</code>.
+      </p>
+    </div>
+
+    <div class="config-section">
+      <h3>2. Colar configuração abaixo</h3>
+      <div class="field">
+        <label>API Key</label>
+        <input type="text" id="cfg-apiKey" placeholder="AIzaSy..."/>
+      </div>
+      <div class="field">
+        <label>Auth Domain</label>
+        <input type="text" id="cfg-authDomain" placeholder="meu-projeto.firebaseapp.com"/>
+      </div>
+      <div class="field">
+        <label>Project ID</label>
+        <input type="text" id="cfg-projectId" placeholder="meu-projeto"/>
+      </div>
+      <div class="field">
+        <label>Storage Bucket</label>
+        <input type="text" id="cfg-storageBucket" placeholder="meu-projeto.appspot.com"/>
+      </div>
+      <div class="field">
+        <label>Messaging Sender ID</label>
+        <input type="text" id="cfg-messagingSenderId" placeholder="123456789"/>
+      </div>
+      <div class="field">
+        <label>App ID</label>
+        <input type="text" id="cfg-appId" placeholder="1:123:web:abc..."/>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-config')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveConfig()">Ligar ao Firebase</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
+  query, orderBy, where, Timestamp
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── STATE ──
+let db = null;
+let app = null;
+let pacientes = [];
+let consultas = [];
+let currentPatientId = null;
+let editingConsultaId = null;
+let weekOffset = 0;
+
+window.currentPatientId = null;
+
+// ── CONFIG ──
+function loadConfig() {
+  try { return JSON.parse(localStorage.getItem('fisioapp_cfg') || 'null'); }
+  catch { return null; }
+}
+
+function saveConfig() {
+  const cfg = {
+    apiKey: document.getElementById('cfg-apiKey').value.trim(),
+    authDomain: document.getElementById('cfg-authDomain').value.trim(),
+    projectId: document.getElementById('cfg-projectId').value.trim(),
+    storageBucket: document.getElementById('cfg-storageBucket').value.trim(),
+    messagingSenderId: document.getElementById('cfg-messagingSenderId').value.trim(),
+    appId: document.getElementById('cfg-appId').value.trim(),
+  };
+  if (!cfg.apiKey || !cfg.projectId) { showToast('Preenche pelo menos API Key e Project ID', 'error'); return; }
+  localStorage.setItem('fisioapp_cfg', JSON.stringify(cfg));
+  closeModal('modal-config');
+  initFirebase(cfg);
+}
+
+window.saveConfig = saveConfig;
+
+function initFirebase(cfg) {
+  try {
+    if (app) { /* already init */ }
+    app = initializeApp(cfg, cfg.projectId);
+    db = getFirestore(app);
+    setStatus('success', '✓ Ligado ao Firebase: ' + cfg.projectId);
+    loadData();
+  } catch (e) {
+    setStatus('error', '✗ Erro ao ligar: ' + e.message);
+  }
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('fb-status');
+  if (!el) return;
+  el.innerHTML = `<div class="fb-banner ${type}">${msg}</div>`;
+  if (type === 'success') setTimeout(() => el.innerHTML = '', 4000);
+}
+
+// ── LOAD DATA ──
+async function loadData() {
+  if (!db) return;
+  try {
+    const [pSnap, cSnap] = await Promise.all([
+      getDocs(query(collection(db, 'pacientes'), orderBy('nome'))),
+      getDocs(query(collection(db, 'consultas'), orderBy('datetime')))
+    ]);
+    pacientes = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    consultas = cSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderAll();
+  } catch (e) {
+    setStatus('error', '✗ Erro ao carregar dados: ' + e.message);
+  }
+}
+
+function renderAll() {
+  renderStats();
+  renderAgenda();
+  renderPacientesTable(pacientes);
+  populatePacienteSelect();
+}
+
+// ── STATS ──
+function renderStats() {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const { mon, sun } = getWeekBounds(weekOffset);
+
+  const semana = consultas.filter(c => {
+    const d = c.datetime?.toDate ? c.datetime.toDate() : new Date(c.datetime);
+    return d >= mon && d <= sun;
+  }).length;
+
+  const hoje = consultas.filter(c => {
+    const d = c.datetime?.toDate ? c.datetime.toDate() : new Date(c.datetime);
+    return d.toISOString().slice(0, 10) === todayStr;
+  }).length;
+
+  const ativos = pacientes.filter(p => p.estado === 'Ativo').length;
+
+  document.getElementById('stat-semana').textContent = semana;
+  document.getElementById('stat-hoje').textContent = hoje;
+  document.getElementById('stat-ativos').textContent = ativos;
+  document.getElementById('stat-total').textContent = consultas.length;
+}
+
+// ── AGENDA ──
+function getWeekBounds(offset) {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  const mon = new Date(now);
+  mon.setDate(now.getDate() + diff + offset * 7);
+  mon.setHours(0, 0, 0, 0);
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  sun.setHours(23, 59, 59, 999);
+  return { mon, sun };
+}
+
+function renderAgenda() {
+  const { mon, sun } = getWeekBounds(weekOffset);
+  const days = [];
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(mon);
+    d.setDate(mon.getDate() + i);
+    days.push(d);
+  }
+
+  const opts = { weekday: 'short', day: 'numeric', month: 'short' };
+  const startLabel = mon.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
+  const endLabel = sun.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' });
+  document.getElementById('week-label').textContent = `${startLabel} – ${endLabel}`;
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const hours = [8, 9, 10, 11, 12, 14, 15, 16, 17];
+
+  let html = '<div class="day-grid">';
+
+  // headers
+  html += '<div class="dg-header"></div>';
+  days.forEach(d => {
+    const ds = d.toISOString().slice(0, 10);
+    const label = d.toLocaleDateString('pt-PT', { weekday: 'short', day: 'numeric' });
+    html += `<div class="dg-header ${ds === todayStr ? 'today' : ''}">${label}</div>`;
+  });
+
+  // rows
+  hours.forEach(h => {
+    html += `<div class="dg-time">${h}h</div>`;
+    days.forEach(d => {
+      const ds = d.toISOString().slice(0, 10);
+      const appt = consultas.find(c => {
+        const cd = c.datetime?.toDate ? c.datetime.toDate() : new Date(c.datetime);
+        return cd.toISOString().slice(0, 10) === ds && cd.getHours() === h;
+      });
+
+      const paciente = appt ? pacientes.find(p => p.id === appt.pacienteId) : null;
+      const name = paciente ? paciente.nome.split(' ')[0] + ' ' + (paciente.nome.split(' ').pop() || '') : '';
+
+      let apptHtml = '';
+      if (appt && paciente) {
+        const cls = appt.tipo === 'Alta' ? 'appt-red' : (appt.tipo === 'Reavaliação' ? 'appt-amber' : 'appt-teal');
+        apptHtml = `<div class="appt ${cls}" onclick="viewFicha('${paciente.id}')" title="${paciente.nome}">
+          ${name}<br><span class="appt-sub">${appt.tipo || paciente.diagnostico || ''}</span>
+        </div>`;
+      }
+
+      html += `<div class="dg-cell" onclick="openConsultaModalDate('${ds}', '${h}')">${apptHtml}</div>`;
+    });
+  });
+
+  html += '</div>';
+  document.getElementById('agenda-grid').innerHTML = html;
+}
+
+// ── PACIENTES TABLE ──
+function renderPacientesTable(list) {
+  const tbody = document.getElementById('pacientes-tbody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="loading">Nenhum paciente encontrado.</td></tr>';
+    return;
+  }
+  const avClasses = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4'];
+  tbody.innerHTML = list.map((p, i) => {
+    const initials = p.nome.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    const avCls = avClasses[i % avClasses.length];
+    const badge = p.estado === 'Ativo' ? 'badge-green' : p.estado === 'Em pausa' ? 'badge-amber' : 'badge-gray';
+    return `<tr onclick="viewFicha('${p.id}')">
+      <td><div class="av-wrap"><div class="av ${avCls}">${initials}</div>${p.nome}</div></td>
+      <td>${p.diagnostico || '—'}</td>
+      <td>${p.telefone || '—'}</td>
+      <td><span class="badge ${badge}">${p.estado || 'Ativo'}</span></td>
+      <td><button class="btn btn-sm" onclick="event.stopPropagation();openEditPaciente('${p.id}')">Editar</button></td>
+    </tr>`;
+  }).join('');
+}
+
+window.filterPacientes = (q) => {
+  const f = pacientes.filter(p =>
+    p.nome.toLowerCase().includes(q.toLowerCase()) ||
+    (p.diagnostico || '').toLowerCase().includes(q.toLowerCase())
+  );
+  renderPacientesTable(f);
+};
+
+// ── FICHA ──
+window.viewFicha = (id) => {
+  currentPatientId = id;
+  window.currentPatientId = id;
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('ficha-topbar-name').textContent = p.nome;
+
+  const initials = p.nome.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+  const pConsultas = consultas
+    .filter(c => c.pacienteId === id)
+    .sort((a, b) => {
+      const da = a.datetime?.toDate ? a.datetime.toDate() : new Date(a.datetime);
+      const db2 = b.datetime?.toDate ? b.datetime.toDate() : new Date(b.datetime);
+      return db2 - da;
+    });
+
+  const nextConsulta = pConsultas.find(c => {
+    const d = c.datetime?.toDate ? c.datetime.toDate() : new Date(c.datetime);
+    return d >= new Date();
+  });
+
+  const nextLabel = nextConsulta
+    ? (() => {
+        const d = nextConsulta.datetime?.toDate ? nextConsulta.datetime.toDate() : new Date(nextConsulta.datetime);
+        return d.toLocaleDateString('pt-PT', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+      })()
+    : '—';
+
+  const badge = p.estado === 'Ativo' ? 'badge-green' : p.estado === 'Em pausa' ? 'badge-amber' : 'badge-gray';
+
+  const notesHtml = pConsultas.length
+    ? pConsultas.map(c => {
+        const d = c.datetime?.toDate ? c.datetime.toDate() : new Date(c.datetime);
+        const dateStr = d.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+        return `<div class="note-item">
+          <div class="note-date">${dateStr} — ${c.tipo || 'Consulta'}</div>
+          ${c.notas || '<span style="color:var(--text-faint);font-style:italic;">Sem notas</span>'}
+          <div style="margin-top:6px;">
+            <button class="btn btn-sm btn-danger" onclick="deleteConsulta('${c.id}')">Eliminar</button>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--text-faint);font-size:13px;padding:1rem 0;">Sem consultas registadas.</div>';
+
+  document.getElementById('ficha-content').innerHTML = `
+    <div class="ficha-header">
+      <div class="ficha-av">${initials}</div>
+      <div>
+        <div class="ficha-name">${p.nome}</div>
+        <div class="ficha-sub">
+          ${p.dataNasc ? calcAge(p.dataNasc) + ' anos · ' : ''}
+          ${p.genero || ''}
+          <span class="badge ${badge}" style="margin-left:6px;">${p.estado || 'Ativo'}</span>
+        </div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Próxima consulta</div>
+        <div style="font-size:14px;font-weight:600;">${nextLabel}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">${pConsultas.length} consulta(s) registada(s)</div>
+      </div>
+    </div>
+
+    <div class="ficha-grid">
+      <div class="card">
+        <div class="card-title">Informação clínica</div>
+        <div class="info-row"><span>Diagnóstico</span><span>${p.diagnostico || '—'}</span></div>
+        <div class="info-row"><span>Médico ref.</span><span>${p.medicoRef || '—'}</span></div>
+        <div class="info-row"><span>Seguro / subsistema</span><span>${p.seguro || '—'}</span></div>
+        <div class="info-row"><span>NIF</span><span>${p.nif || '—'}</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contactos</div>
+        <div class="info-row"><span>Telefone</span><span>${p.telefone || '—'}</span></div>
+        <div class="info-row"><span>Email</span><span style="font-size:12px;">${p.email || '—'}</span></div>
+        <div class="info-row"><span>Data nasc.</span><span>${p.dataNasc || '—'}</span></div>
+        <div class="info-row"><span>Género</span><span>${p.genero || '—'}</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Histórico de consultas</div>
+      ${notesHtml}
+    </div>
+  `;
+
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-ficha').classList.add('active');
+};
+
+function calcAge(dateStr) {
+  const dob = new Date(dateStr);
+  const diff = Date.now() - dob.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+}
+
+// ── SAVE PACIENTE ──
+async function savePaciente() {
+  if (!db) { showToast('Firebase não configurado', 'error'); return; }
+  const nome = document.getElementById('p-nome').value.trim();
+  if (!nome) { showToast('Nome obrigatório', 'error'); return; }
+
+  const data = {
+    nome,
+    dataNasc: document.getElementById('p-nasc').value,
+    genero: document.getElementById('p-genero').value,
+    telefone: document.getElementById('p-tel').value,
+    email: document.getElementById('p-email').value,
+    diagnostico: document.getElementById('p-diag').value,
+    nif: document.getElementById('p-nif').value,
+    seguro: document.getElementById('p-seguro').value,
+    medicoRef: document.getElementById('p-medico').value,
+    estado: document.getElementById('p-estado').value,
+    criadoEm: Timestamp.now(),
+  };
+
+  try {
+    if (editingConsultaId) {
+      await updateDoc(doc(db, 'pacientes', editingConsultaId), data);
+      showToast('Paciente atualizado', 'success');
+    } else {
+      await addDoc(collection(db, 'pacientes'), data);
+      showToast('Paciente guardado', 'success');
+    }
+    closeModal('modal-paciente');
+    await loadData();
+  } catch (e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+window.savePaciente = savePaciente;
+
+// ── SAVE CONSULTA ──
+async function saveConsulta() {
+  if (!db) { showToast('Firebase não configurado', 'error'); return; }
+  const pacienteId = document.getElementById('consulta-paciente').value;
+  const data = document.getElementById('consulta-data').value;
+  const hora = document.getElementById('consulta-hora').value;
+  if (!pacienteId || !data) { showToast('Preenche paciente e data', 'error'); return; }
+
+  const datetime = Timestamp.fromDate(new Date(`${data}T${hora}:00`));
+
+  const payload = {
+    pacienteId,
+    datetime,
+    tipo: document.getElementById('consulta-tipo').value,
+    notas: document.getElementById('consulta-notas').value,
+  };
+
+  try {
+    await addDoc(collection(db, 'consultas'), payload);
+    showToast('Consulta guardada', 'success');
+    closeModal('modal-consulta');
+    await loadData();
+    if (currentPatientId) viewFicha(currentPatientId);
+  } catch (e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+window.saveConsulta = saveConsulta;
+
+// ── DELETE ──
+window.deleteConsulta = async (id) => {
+  if (!confirm('Eliminar esta consulta?')) return;
+  try {
+    await deleteDoc(doc(db, 'consultas', id));
+    showToast('Consulta eliminada', 'success');
+    await loadData();
+    if (currentPatientId) viewFicha(currentPatientId);
+  } catch (e) { showToast('Erro: ' + e.message, 'error'); }
+};
+
+window.deletePaciente = async () => {
+  if (!currentPatientId) return;
+  const p = pacientes.find(x => x.id === currentPatientId);
+  if (!confirm(`Eliminar ${p?.nome}? As consultas associadas não serão eliminadas.`)) return;
+  try {
+    await deleteDoc(doc(db, 'pacientes', currentPatientId));
+    showToast('Paciente eliminado', 'success');
+    await loadData();
+    goView('pacientes');
+  } catch (e) { showToast('Erro: ' + e.message, 'error'); }
+};
+
+// ── WEEK NAV ──
+window.changeWeek = (delta) => { weekOffset += delta; renderAll(); };
+window.goToday = () => { weekOffset = 0; renderAll(); };
+
+// ── MODALS ──
+window.openConsultaModal = (patId = null) => {
+  document.getElementById('consulta-modal-title').textContent = 'Nova consulta';
+  document.getElementById('consulta-data').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('consulta-hora').value = '09:00';
+  document.getElementById('consulta-notas').value = '';
+  populatePacienteSelect(patId);
+  openModal('modal-consulta');
+};
+
+window.openConsultaModalDate = (dateStr, hour) => {
+  document.getElementById('consulta-data').value = dateStr;
+  document.getElementById('consulta-hora').value = String(hour).padStart(2, '0') + ':00';
+  document.getElementById('consulta-notas').value = '';
+  document.getElementById('consulta-modal-title').textContent = 'Nova consulta';
+  populatePacienteSelect(null);
+  openModal('modal-consulta');
+};
+
+window.openPacienteModal = () => {
+  editingConsultaId = null;
+  ['p-nome','p-nasc','p-tel','p-email','p-diag','p-nif','p-seguro','p-medico'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  openModal('modal-paciente');
+};
+
+window.openEditPaciente = (id) => {
+  editingConsultaId = id;
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('p-nome').value = p.nome || '';
+  document.getElementById('p-nasc').value = p.dataNasc || '';
+  document.getElementById('p-genero').value = p.genero || '';
+  document.getElementById('p-tel').value = p.telefone || '';
+  document.getElementById('p-email').value = p.email || '';
+  document.getElementById('p-diag').value = p.diagnostico || '';
+  document.getElementById('p-nif').value = p.nif || '';
+  document.getElementById('p-seguro').value = p.seguro || '';
+  document.getElementById('p-medico').value = p.medicoRef || '';
+  document.getElementById('p-estado').value = p.estado || 'Ativo';
+  openModal('modal-paciente');
+};
+
+window.openConfig = () => {
+  const cfg = loadConfig();
+  if (cfg) {
+    ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'].forEach(k => {
+      const el = document.getElementById('cfg-' + k);
+      if (el) el.value = cfg[k] || '';
+    });
+  }
+  openModal('modal-config');
+};
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+window.closeModal = (id) => { document.getElementById(id).classList.remove('open'); };
+
+function populatePacienteSelect(selectedId = null) {
+  const sel = document.getElementById('consulta-paciente');
+  sel.innerHTML = pacientes.length
+    ? pacientes.map(p => `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${p.nome}</option>`).join('')
+    : '<option value="">— sem pacientes —</option>';
+}
+
+// ── NAVIGATION ──
+window.goView = (name) => {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  const nb = document.getElementById('nav-' + name);
+  if (nb) nb.classList.add('active');
+};
+
+// ── TOAST ──
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+window.showToast = showToast;
+
+// ── INIT ──
+(function init() {
+  renderAgenda(); // render skeleton
+  const cfg = loadConfig();
+  if (cfg && cfg.apiKey) {
+    try { initFirebase(cfg); }
+    catch (e) { setStatus('error', 'Erro Firebase: ' + e.message); }
+  } else {
+    document.getElementById('fb-status').innerHTML = `
+      <div class="fb-banner">
+        ⚠ Firebase não configurado. Clica em <strong>Configurar Firebase</strong> na barra lateral para ligar à base de dados.
+      </div>`;
+  }
+})();
+</script>
+</body>
+</html>
