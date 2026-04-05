@@ -5,7 +5,7 @@ import { closeModal, closeSidebar, openModal, registerRenderers, showPage, toggl
 import { renderDashboard } from "./js/modules/dashboard.js";
 import { calDayClick, calNav, renderCalendar } from "./js/modules/calendar.js";
 import { editAppointment, renderAppointments, saveAppointment } from "./js/modules/appointments.js";
-import { openPatientDetail, renderPatients, savePatient, editPatientFromDetail, newApptForPatient } from "./js/modules/patients.js";
+import { openPatientDetail, renderPatients, savePatient, editPatientFromDetail, newApptForPatient, deletePatientFromDetail } from "./js/modules/patients.js";
 import { openPaymentModal, renderPayments, savePayment } from "./js/modules/payments.js";
 
 registerRenderers({
@@ -32,6 +32,7 @@ window.filterAppointments = renderAppointments;
 window.openPatientDetail = openPatientDetail;
 window.editPatientFromDetail = editPatientFromDetail;
 window.newApptForPatient = () => newApptForPatient(window.openModal);
+window.deletePatientFromDetail = deletePatientFromDetail;
 window.openPaymentModal = openPaymentModal;
 window.editAppointment = editAppointment;
 window.calNav = calNav;

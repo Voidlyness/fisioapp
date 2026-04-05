@@ -128,3 +128,25 @@ export function newApptForPatient(openAppointmentModal) {
   openAppointmentModal("modal-appointment");
   document.getElementById("appt-patient").value = state.currentDetailPatientId || "";
 }
+
+export async function deletePatientFromDetail() {
+  const patient = getPatients().find(item => item.id === state.currentDetailPatientId);
+  if (!patient) return;
+
+  const relatedAppointments = getAppointments().filter(item => item.patientId === patient.id);
+  const message = relatedAppointments.length
+    ? `Queres mesmo eliminar o paciente "${patient.name}" e ${relatedAppointments.length} consulta(s) associada(s)?`
+    : `Queres mesmo eliminar o paciente "${patient.name}"?`;
+
+  if (!window.confirm(message)) return;
+
+  try {
+    await state.store.deletePatient(patient.id);
+    closeModal("modal-patient-detail");
+    showPage("patients");
+    toast("Paciente eliminado");
+  } catch (error) {
+    console.error(error);
+    toast("Não foi possível eliminar o paciente", "error");
+  }
+}

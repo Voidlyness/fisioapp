@@ -61,12 +61,20 @@ export function createLocalStore() {
       else items.push(appointment);
       ls("appointments", items);
       state.appointments = items;
+    },
+    async deletePatient(patientId) {
+      const patients = state.patients.filter(item => item.id !== patientId);
+      const appointments = state.appointments.filter(item => item.patientId !== patientId);
+      ls("patients", patients);
+      ls("appointments", appointments);
+      state.patients = patients;
+      state.appointments = appointments;
     }
   };
 }
 
 export async function createFirestoreStore() {
-  const { collection, doc, getDocs, setDoc } = firebaseRefs.firestore;
+  const { collection, doc, getDocs, setDoc, deleteDoc } = firebaseRefs.firestore;
 
   function scopedCollection(name) {
     return collection(state.db, "users", state.currentUser.uid, name);
@@ -105,6 +113,15 @@ export async function createFirestoreStore() {
       if (index >= 0) items[index] = appointment;
       else items.push(appointment);
       state.appointments = items;
+    },
+    async deletePatient(patientId) {
+      const relatedAppointments = state.appointments.filter(item => item.patientId === patientId);
+      await Promise.all([
+        deleteDoc(doc(scopedCollection("patients"), patientId)),
+        ...relatedAppointments.map(item => deleteDoc(doc(scopedCollection("appointments"), item.id)))
+      ]);
+      state.patients = state.patients.filter(item => item.id !== patientId);
+      state.appointments = state.appointments.filter(item => item.patientId !== patientId);
     }
   };
 }
