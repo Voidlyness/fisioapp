@@ -7,235 +7,11 @@
 <title>FisioHome · Gestão de Consultas</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0d1117;
-  --bg2: #161b22;
-  --bg3: #1c2333;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.14);
-  --text: #e6edf3;
-  --muted: #7d8590;
-  --muted2: #9da5b0;
-  --accent: #3fb68b;
-  --accent2: #2d9970;
-  --accent-glow: rgba(63,182,139,0.15);
-  --red: #f85149;
-  --amber: #e3b341;
-  --blue: #58a6ff;
-  --purple: #bc8cff;
-  --serif: 'DM Serif Display', Georgia, serif;
-  --sans: 'DM Sans', system-ui, sans-serif;
-  --r: 12px;
-  --r2: 8px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
-input,button,select,textarea{font-family:inherit}
-
-/* ====== SCROLLBAR ====== */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-
-/* ====== SCREENS ====== */
-.screen{display:none;height:100vh;overflow:hidden}
-.screen.active{display:flex}
-
-/* ====== LOGIN ====== */
-#screen-login{align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
-.login-bg{position:absolute;inset:0;background:
-  radial-gradient(ellipse 60% 50% at 20% 80%, rgba(63,182,139,0.08) 0%, transparent 60%),
-  radial-gradient(ellipse 50% 40% at 80% 20%, rgba(88,166,255,0.06) 0%, transparent 60%);
-}
-.login-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 80%)}
-.login-card{position:relative;z-index:1;background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:48px 44px;width:100%;max-width:400px;box-shadow:0 8px 48px rgba(0,0,0,0.6)}
-.login-logo{font-family:var(--serif);font-size:28px;color:var(--accent);margin-bottom:4px;letter-spacing:-0.5px}
-.login-logo span{color:var(--text);font-style:italic}
-.login-sub{color:var(--muted);font-size:13px;margin-bottom:36px;font-weight:300}
-.login-label{display:block;font-size:12px;font-weight:500;color:var(--muted2);margin-bottom:6px;letter-spacing:0.04em;text-transform:uppercase}
-.login-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:11px 14px;border-radius:var(--r2);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:16px}
-.login-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
-.login-input::placeholder{color:var(--muted)}
-.btn-login{width:100%;background:var(--accent);color:#0d1117;border:none;padding:12px;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .1s;margin-top:4px}
-.btn-login:hover{background:var(--accent2)}
-.btn-login:active{transform:scale(.98)}
-.login-error{color:var(--red);font-size:13px;margin-top:12px;display:none}
-.login-demo{margin-top:24px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--muted)}
-.btn-demo{background:transparent;border:1px solid var(--border2);color:var(--muted2);padding:7px 16px;border-radius:6px;cursor:pointer;font-size:12px;margin-top:8px;transition:all .2s;display:inline-block}
-.btn-demo:hover{border-color:var(--accent);color:var(--accent)}
-
-/* ====== APP LAYOUT ====== */
-#screen-app{flex-direction:column}
-.app-shell{display:flex;flex:1;overflow:hidden}
-
-/* ====== SIDEBAR ====== */
-.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;padding:20px 0;transition:transform .25s}
-.sidebar-logo{font-family:var(--serif);font-size:20px;color:var(--accent);padding:0 20px 24px;letter-spacing:-0.5px}
-.sidebar-logo span{color:var(--text);font-style:italic}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;color:var(--muted);font-size:14px;font-weight:400;transition:all .15s;border-left:2px solid transparent;margin:1px 0}
-.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.7}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
-.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(63,182,139,0.08);font-weight:500}
-.nav-item.active svg{opacity:1}
-.sidebar-spacer{flex:1}
-.sidebar-user{padding:16px 20px;border-top:1px solid var(--border)}
-.sidebar-user-name{font-size:13px;font-weight:500;color:var(--text)}
-.sidebar-user-role{font-size:11px;color:var(--muted)}
-.btn-logout{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:12px;margin-top:8px;padding:0;text-decoration:underline;font-family:inherit}
-.btn-logout:hover{color:var(--red)}
-
-/* ====== TOPBAR (mobile) ====== */
-.topbar{display:none;align-items:center;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);gap:12px}
-.topbar-logo{font-family:var(--serif);font-size:18px;color:var(--accent)}
-.topbar-logo span{color:var(--text);font-style:italic}
-.btn-menu{background:none;border:none;color:var(--text);cursor:pointer;padding:4px}
-.btn-menu svg{width:22px;height:22px}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99}
-.sidebar-overlay.open{display:block}
-
-/* ====== CONTENT ====== */
-.content{flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg)}
-.page{display:none}
-.page.active{display:block}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
-.page-title{font-family:var(--serif);font-size:26px;color:var(--text);letter-spacing:-0.5px}
-.page-subtitle{font-size:13px;color:var(--muted);margin-top:2px}
-
-/* ====== BUTTONS ====== */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r2);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:none;font-family:inherit}
-.btn-primary{background:var(--accent);color:#0d1117}
-.btn-primary:hover{background:var(--accent2)}
-.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted2)}
-.btn-ghost:hover{border-color:var(--border2);color:var(--text);background:rgba(255,255,255,0.04)}
-.btn-danger{background:rgba(248,81,73,0.12);color:var(--red);border:1px solid rgba(248,81,73,0.2)}
-.btn-danger:hover{background:rgba(248,81,73,0.2)}
-.btn svg{width:14px;height:14px}
-
-/* ====== CARDS ====== */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
-.card-title{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
-
-/* ====== STATS GRID ====== */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.stat-card.green::before{background:var(--accent)}
-.stat-card.blue::before{background:var(--blue)}
-.stat-card.amber::before{background:var(--amber)}
-.stat-card.red::before{background:var(--red)}
-.stat-value{font-family:var(--serif);font-size:32px;color:var(--text);line-height:1;margin-bottom:4px}
-.stat-label{font-size:12px;color:var(--muted);font-weight:400}
-.stat-delta{font-size:11px;color:var(--accent);margin-top:6px}
-
-/* ====== CALENDAR ====== */
-.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.cal-month{font-family:var(--serif);font-size:22px;color:var(--text);flex:1;letter-spacing:-0.3px}
-.cal-btn{background:var(--bg2);border:1px solid var(--border2);color:var(--muted2);width:32px;height:32px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.cal-btn:hover{color:var(--text);border-color:var(--border2)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal-dow{text-align:center;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:6px 0}
-.cal-day{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 6px;min-height:80px;cursor:pointer;transition:all .15s;position:relative}
-.cal-day:hover{border-color:var(--border2);background:var(--bg3)}
-.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-glow)}
-.cal-day.other-month .cal-day-num{color:var(--muted)}
-.cal-day.other-month{opacity:.45}
-.cal-day-num{font-size:12px;font-weight:500;color:var(--muted2);margin-bottom:4px}
-.cal-day.today .cal-day-num{color:var(--accent);font-weight:600}
-.cal-event{background:var(--accent-glow);border-left:2px solid var(--accent);border-radius:3px;padding:2px 5px;font-size:10px;color:var(--accent);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:background .15s}
-.cal-event:hover{background:rgba(63,182,139,0.25)}
-.cal-event.pending{border-left-color:var(--amber);color:var(--amber);background:rgba(227,179,65,0.1)}
-.cal-event.cancelled{border-left-color:var(--red);color:var(--red);background:rgba(248,81,73,0.1);text-decoration:line-through}
-
-/* ====== LIST / TABLE ====== */
-.list-table{width:100%;border-collapse:collapse}
-.list-table th{text-align:left;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px;border-bottom:1px solid var(--border)}
-.list-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
-.list-table tr:last-child td{border-bottom:none}
-.list-table tr:hover td{background:rgba(255,255,255,0.025)}
-.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500;gap:4px}
-.badge-green{background:rgba(63,182,139,0.12);color:var(--accent)}
-.badge-amber{background:rgba(227,179,65,0.12);color:var(--amber)}
-.badge-red{background:rgba(248,81,73,0.12);color:var(--red)}
-.badge-blue{background:rgba(88,166,255,0.12);color:var(--blue)}
-.badge-gray{background:rgba(255,255,255,0.06);color:var(--muted2)}
-
-/* ====== MODAL ====== */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow)}
-.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
-.modal-title{font-family:var(--serif);font-size:19px;color:var(--text)}
-.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;transition:color .15s}
-.modal-close:hover{color:var(--text)}
-.modal-body{padding:24px}
-.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
-.form-row{margin-bottom:16px}
-.form-label{display:block;font-size:12px;font-weight:500;color:var(--muted2);margin-bottom:6px;letter-spacing:0.03em;text-transform:uppercase}
-.form-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;border-radius:var(--r2);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
-.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
-.form-input::placeholder{color:var(--muted)}
-select.form-input option{background:var(--bg3)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* ====== PATIENT CARD ====== */
-.patient-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.patient-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;cursor:pointer;transition:all .2s}
-.patient-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-.patient-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fff;margin-bottom:12px}
-.patient-name{font-size:15px;font-weight:500;color:var(--text);margin-bottom:2px}
-.patient-diag{font-size:12px;color:var(--muted);margin-bottom:10px}
-.patient-meta{display:flex;gap:8px;flex-wrap:wrap}
-
-/* ====== PAYMENT ====== */
-.pay-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
-.pay-row:last-child{border-bottom:none}
-.pay-info{flex:1}
-.pay-patient{font-size:14px;font-weight:500;color:var(--text)}
-.pay-date{font-size:12px;color:var(--muted);margin-top:1px}
-.pay-amount{font-family:var(--serif);font-size:20px;color:var(--text);margin:0 20px}
-.pay-actions{display:flex;gap:8px}
-
-/* ====== TOAST ====== */
-.toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px}
-.toast{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;font-size:13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;animation:toastIn .25s ease;min-width:240px}
-.toast.success{border-left:3px solid var(--accent)}
-.toast.error{border-left:3px solid var(--red)}
-.toast.info{border-left:3px solid var(--blue)}
-@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* ====== EMPTY STATE ====== */
-.empty{text-align:center;padding:60px 20px;color:var(--muted)}
-.empty svg{width:40px;height:40px;margin-bottom:12px;opacity:.3}
-.empty p{font-size:14px}
-
-/* ====== MOBILE ====== */
-@media(max-width:768px){
-  .topbar{display:flex}
-  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:100;transform:translateX(-100%);padding-top:16px}
-  .sidebar.open{transform:translateX(0)}
-  .content{padding:20px 16px}
-  .form-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .cal-grid{gap:3px}
-  .cal-day{min-height:60px;padding:5px 4px}
-  .cal-event{display:none}
-  .cal-day-num{font-size:11px}
-  .page-header{flex-direction:column;align-items:flex-start}
-  .list-table th:nth-child(n+4),.list-table td:nth-child(n+4){display:none}
-  .modal{max-height:85vh}
-}
-@media(min-width:769px){
-  .sidebar{position:relative;transform:none!important}
-  .sidebar-overlay{display:none!important}
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<!-- ===== LOGIN ===== -->
 <div class="screen active" id="screen-login">
   <div class="login-bg"></div>
   <div class="login-grid"></div>
@@ -249,16 +25,13 @@ select.form-input option{background:var(--bg3)}
     <button class="btn-login" onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-error">Email ou palavra-passe incorretos.</div>
     <div class="login-demo">
-      <div>Demonstração — sem Firebase configurado</div>
+      <div>Demonstração, sem Firebase configurado</div>
       <button class="btn-demo" onclick="demoLogin()">Entrar como demo</button>
     </div>
   </div>
 </div>
 
-<!-- ===== APP ===== -->
 <div class="screen" id="screen-app">
-
-  <!-- Topbar mobile -->
   <div class="topbar">
     <button class="btn-menu" onclick="toggleSidebar()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
@@ -269,7 +42,6 @@ select.form-input option{background:var(--bg3)}
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <div class="app-shell">
-    <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-logo">Fisio<span>Home</span></div>
 
@@ -302,14 +74,11 @@ select.form-input option{background:var(--bg3)}
       </div>
     </nav>
 
-    <!-- Content -->
     <main class="content">
-
-      <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
         <div class="page-header">
           <div>
-            <div class="page-title">Bom dia 👋</div>
+            <div class="page-title">Bom dia</div>
             <div class="page-subtitle" id="dash-date">·</div>
           </div>
           <button class="btn btn-primary" onclick="openModal('modal-appointment')">
@@ -318,26 +87,14 @@ select.form-input option{background:var(--bg3)}
           </button>
         </div>
 
-        <div class="stats-grid" id="stats-grid">
-          <div class="stat-card green">
-            <div class="stat-value" id="stat-today">0</div>
-            <div class="stat-label">Consultas hoje</div>
-          </div>
-          <div class="stat-card blue">
-            <div class="stat-value" id="stat-week">0</div>
-            <div class="stat-label">Esta semana</div>
-          </div>
-          <div class="stat-card amber">
-            <div class="stat-value" id="stat-pending">0</div>
-            <div class="stat-label">Pagamentos pendentes</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-value" id="stat-revenue">0€</div>
-            <div class="stat-label">Faturado este mês</div>
-          </div>
+        <div class="stats-grid">
+          <div class="stat-card green"><div class="stat-value" id="stat-today">0</div><div class="stat-label">Consultas hoje</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="stat-week">0</div><div class="stat-label">Esta semana</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="stat-pending">0</div><div class="stat-label">Pagamentos pendentes</div></div>
+          <div class="stat-card green"><div class="stat-value" id="stat-revenue">0€</div><div class="stat-label">Faturado este mês</div></div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px" class="dash-cols">
+        <div class="dash-cols">
           <div class="card">
             <div class="card-title">Próximas consultas</div>
             <div id="dash-upcoming"></div>
@@ -347,11 +104,8 @@ select.form-input option{background:var(--bg3)}
             <div id="dash-unpaid"></div>
           </div>
         </div>
-
-        <style>.dash-cols{} @media(max-width:768px){.dash-cols{grid-template-columns:1fr}}</style>
       </div>
 
-      <!-- CALENDAR -->
       <div class="page" id="page-calendar">
         <div class="page-header">
           <div>
@@ -363,30 +117,19 @@ select.form-input option{background:var(--bg3)}
             Nova consulta
           </button>
         </div>
-        <div class="card" style="padding:24px">
+        <div class="card card-padded">
           <div class="cal-nav">
-            <button class="cal-btn" onclick="calNav(-1)">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
+            <button class="cal-btn" onclick="calNav(-1)"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg></button>
             <div class="cal-month" id="cal-month-label">·</div>
-            <button class="cal-btn" onclick="calNav(1)">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+            <button class="cal-btn" onclick="calNav(1)"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></button>
           </div>
           <div class="cal-grid">
-            <div class="cal-dow">Dom</div>
-            <div class="cal-dow">Seg</div>
-            <div class="cal-dow">Ter</div>
-            <div class="cal-dow">Qua</div>
-            <div class="cal-dow">Qui</div>
-            <div class="cal-dow">Sex</div>
-            <div class="cal-dow">Sáb</div>
+            <div class="cal-dow">Dom</div><div class="cal-dow">Seg</div><div class="cal-dow">Ter</div><div class="cal-dow">Qua</div><div class="cal-dow">Qui</div><div class="cal-dow">Sex</div><div class="cal-dow">Sáb</div>
           </div>
           <div class="cal-grid" id="cal-days"></div>
         </div>
       </div>
 
-      <!-- PATIENTS -->
       <div class="page" id="page-patients">
         <div class="page-header">
           <div>
@@ -398,13 +141,12 @@ select.form-input option{background:var(--bg3)}
             Novo paciente
           </button>
         </div>
-        <div style="margin-bottom:16px">
-          <input class="form-input" style="max-width:320px" type="search" placeholder="Pesquisar paciente..." oninput="filterPatients(this.value)">
+        <div class="page-toolbar">
+          <input class="form-input toolbar-search" type="search" placeholder="Pesquisar paciente..." oninput="filterPatients(this.value)">
         </div>
         <div class="patient-grid" id="patients-grid"></div>
       </div>
 
-      <!-- APPOINTMENTS -->
       <div class="page" id="page-appointments">
         <div class="page-header">
           <div>
@@ -416,33 +158,24 @@ select.form-input option{background:var(--bg3)}
             Nova consulta
           </button>
         </div>
-        <div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap">
-          <select class="form-input" style="width:auto" onchange="filterAppointments(this.value)" id="appt-filter">
+        <div class="page-toolbar">
+          <select class="form-input toolbar-select" onchange="filterAppointments(this.value)" id="appt-filter">
             <option value="all">Todas</option>
             <option value="scheduled">Agendadas</option>
             <option value="done">Realizadas</option>
             <option value="cancelled">Canceladas</option>
           </select>
         </div>
-        <div class="card" style="padding:0;overflow:hidden">
+        <div class="card card-table">
           <table class="list-table" id="appointments-table">
             <thead>
-              <tr>
-                <th>Paciente</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Localização</th>
-                <th>Estado</th>
-                <th>Pagamento</th>
-                <th></th>
-              </tr>
+              <tr><th>Paciente</th><th>Data</th><th>Hora</th><th>Localização</th><th>Estado</th><th>Pagamento</th><th></th></tr>
             </thead>
             <tbody id="appointments-body"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- PAYMENTS -->
       <div class="page" id="page-payments">
         <div class="page-header">
           <div>
@@ -450,81 +183,37 @@ select.form-input option{background:var(--bg3)}
             <div class="page-subtitle">Registo e controlo financeiro</div>
           </div>
         </div>
-
-        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
-          <div class="stat-card green">
-            <div class="stat-value" id="pay-received">0€</div>
-            <div class="stat-label">Recebido este mês</div>
-          </div>
-          <div class="stat-card amber">
-            <div class="stat-value" id="pay-pending-amount">0€</div>
-            <div class="stat-label">Em dívida</div>
-          </div>
-          <div class="stat-card blue">
-            <div class="stat-value" id="pay-sessions">0</div>
-            <div class="stat-label">Sessões faturadas</div>
-          </div>
+        <div class="stats-grid payments-grid">
+          <div class="stat-card green"><div class="stat-value" id="pay-received">0€</div><div class="stat-label">Recebido este mês</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="pay-pending-amount">0€</div><div class="stat-label">Em dívida</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="pay-sessions">0</div><div class="stat-label">Sessões faturadas</div></div>
         </div>
-
-        <div class="card">
-          <div class="card-title">Pendentes</div>
-          <div id="payments-pending-list"></div>
-        </div>
-        <div class="card" style="margin-top:16px">
-          <div class="card-title">Histórico de pagamentos</div>
-          <div id="payments-history-list"></div>
-        </div>
+        <div class="card"><div class="card-title">Pendentes</div><div id="payments-pending-list"></div></div>
+        <div class="card mt-16"><div class="card-title">Histórico de pagamentos</div><div id="payments-history-list"></div></div>
       </div>
-
     </main>
   </div>
 </div>
 
-<!-- ===== MODALS ===== -->
-
-<!-- New Appointment -->
 <div class="modal-overlay" id="modal-appointment">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="appt-modal-title">Nova consulta</div>
-      <button class="modal-close" onclick="closeModal('modal-appointment')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
+      <button class="modal-close" onclick="closeModal('modal-appointment')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="appt-edit-id">
-      <div class="form-row">
-        <label class="form-label">Paciente</label>
-        <select class="form-input" id="appt-patient"></select>
-      </div>
+      <div class="form-row"><label class="form-label">Paciente</label><select class="form-input" id="appt-patient"></select></div>
       <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label">Data</label>
-          <input class="form-input" type="date" id="appt-date">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Hora</label>
-          <input class="form-input" type="time" id="appt-time" value="09:00">
-        </div>
+        <div class="form-row"><label class="form-label">Data</label><input class="form-input" type="date" id="appt-date"></div>
+        <div class="form-row"><label class="form-label">Hora</label><input class="form-input" type="time" id="appt-time" value="09:00"></div>
       </div>
-      <div class="form-row">
-        <label class="form-label">Morada (domicílio)</label>
-        <input class="form-input" type="text" id="appt-address" placeholder="Rua, número, localidade">
-      </div>
+      <div class="form-row"><label class="form-label">Morada (domicílio)</label><input class="form-input" type="text" id="appt-address" placeholder="Rua, número, localidade"></div>
       <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label">Valor (€)</label>
-          <input class="form-input" type="number" id="appt-price" placeholder="40" min="0">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Duração (min)</label>
-          <input class="form-input" type="number" id="appt-duration" placeholder="60" min="15" step="15">
-        </div>
+        <div class="form-row"><label class="form-label">Valor (€)</label><input class="form-input" type="number" id="appt-price" placeholder="40" min="0"></div>
+        <div class="form-row"><label class="form-label">Duração (min)</label><input class="form-input" type="number" id="appt-duration" placeholder="60" min="15" step="15"></div>
       </div>
-      <div class="form-row">
-        <label class="form-label">Notas clínicas</label>
-        <textarea class="form-input" id="appt-notes" rows="3" placeholder="Observações, exercícios, evolução..."></textarea>
-      </div>
+      <div class="form-row"><label class="form-label">Notas clínicas</label><textarea class="form-input" id="appt-notes" rows="3" placeholder="Observações, exercícios, evolução..."></textarea></div>
       <div class="form-row">
         <label class="form-label">Estado</label>
         <select class="form-input" id="appt-status">
@@ -534,95 +223,51 @@ select.form-input option{background:var(--bg3)}
         </select>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-appointment')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveAppointment()">Guardar</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-appointment')">Cancelar</button><button class="btn btn-primary" onclick="saveAppointment()">Guardar</button></div>
   </div>
 </div>
 
-<!-- New Patient -->
 <div class="modal-overlay" id="modal-patient">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="patient-modal-title">Novo paciente</div>
-      <button class="modal-close" onclick="closeModal('modal-patient')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
+      <button class="modal-close" onclick="closeModal('modal-patient')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="patient-edit-id">
       <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label">Nome</label>
-          <input class="form-input" type="text" id="patient-name" placeholder="Nome completo">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Data de nascimento</label>
-          <input class="form-input" type="date" id="patient-dob">
-        </div>
+        <div class="form-row"><label class="form-label">Nome</label><input class="form-input" type="text" id="patient-name" placeholder="Nome completo"></div>
+        <div class="form-row"><label class="form-label">Data de nascimento</label><input class="form-input" type="date" id="patient-dob"></div>
       </div>
       <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label">Telemóvel</label>
-          <input class="form-input" type="tel" id="patient-phone" placeholder="912 345 678">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="patient-email" placeholder="paciente@email.com">
-        </div>
+        <div class="form-row"><label class="form-label">Telemóvel</label><input class="form-input" type="tel" id="patient-phone" placeholder="912 345 678"></div>
+        <div class="form-row"><label class="form-label">Email</label><input class="form-input" type="email" id="patient-email" placeholder="paciente@email.com"></div>
       </div>
-      <div class="form-row">
-        <label class="form-label">Morada</label>
-        <input class="form-input" type="text" id="patient-address" placeholder="Rua, número, localidade">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Diagnóstico / Patologia</label>
-        <input class="form-input" type="text" id="patient-diagnosis" placeholder="ex: Lombalgia crónica, Gonartrose...">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Valor por sessão (€)</label>
-        <input class="form-input" type="number" id="patient-price" placeholder="40" min="0">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Notas / Observações</label>
-        <textarea class="form-input" id="patient-notes" rows="3" placeholder="Historial clínico, medicação, alergias..."></textarea>
-      </div>
+      <div class="form-row"><label class="form-label">Morada</label><input class="form-input" type="text" id="patient-address" placeholder="Rua, número, localidade"></div>
+      <div class="form-row"><label class="form-label">Diagnóstico / Patologia</label><input class="form-input" type="text" id="patient-diagnosis" placeholder="ex: Lombalgia crónica, Gonartrose..."></div>
+      <div class="form-row"><label class="form-label">Valor por sessão (€)</label><input class="form-input" type="number" id="patient-price" placeholder="40" min="0"></div>
+      <div class="form-row"><label class="form-label">Notas / Observações</label><textarea class="form-input" id="patient-notes" rows="3" placeholder="Historial clínico, medicação, alergias..."></textarea></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-patient')">Cancelar</button>
-      <button class="btn btn-primary" onclick="savePatient()">Guardar</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-patient')">Cancelar</button><button class="btn btn-primary" onclick="savePatient()">Guardar</button></div>
   </div>
 </div>
 
-<!-- Patient Detail -->
 <div class="modal-overlay" id="modal-patient-detail">
-  <div class="modal" style="max-width:580px">
+  <div class="modal modal-wide">
     <div class="modal-header">
       <div class="modal-title" id="detail-patient-name">Paciente</div>
-      <button class="modal-close" onclick="closeModal('modal-patient-detail')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
+      <button class="modal-close" onclick="closeModal('modal-patient-detail')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
-    <div class="modal-body">
-      <div id="patient-detail-content"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="editPatientFromDetail()">Editar</button>
-      <button class="btn btn-primary" onclick="newApptForPatient()">Nova consulta</button>
-    </div>
+    <div class="modal-body"><div id="patient-detail-content"></div></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="editPatientFromDetail()">Editar</button><button class="btn btn-primary" onclick="newApptForPatient()">Nova consulta</button></div>
   </div>
 </div>
 
-<!-- Payment -->
 <div class="modal-overlay" id="modal-payment">
-  <div class="modal" style="max-width:420px">
+  <div class="modal modal-narrow">
     <div class="modal-header">
       <div class="modal-title">Registar pagamento</div>
-      <button class="modal-close" onclick="closeModal('modal-payment')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
+      <button class="modal-close" onclick="closeModal('modal-payment')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="pay-appt-id">
@@ -635,693 +280,17 @@ select.form-input option{background:var(--bg3)}
           <option value="transferencia">Transferência</option>
         </select>
       </div>
-      <div class="form-row">
-        <label class="form-label">Valor recebido (€)</label>
-        <input class="form-input" type="number" id="pay-amount" min="0">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Data</label>
-        <input class="form-input" type="date" id="pay-date">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Notas</label>
-        <input class="form-input" type="text" id="pay-notes" placeholder="Referência, observações...">
-      </div>
+      <div class="form-row"><label class="form-label">Valor recebido (€)</label><input class="form-input" type="number" id="pay-amount" min="0"></div>
+      <div class="form-row"><label class="form-label">Data</label><input class="form-input" type="date" id="pay-date"></div>
+      <div class="form-row"><label class="form-label">Notas</label><input class="form-input" type="text" id="pay-notes" placeholder="Referência, observações..."></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-payment')">Cancelar</button>
-      <button class="btn btn-primary" onclick="savePayment()">Confirmar pagamento</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-payment')">Cancelar</button><button class="btn btn-primary" onclick="savePayment()">Confirmar pagamento</button></div>
   </div>
 </div>
 
-<!-- Toast container -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- ===== FIREBASE SDK ===== -->
-<script type="module">
-// ═══════════════════════════════════════════════════════
-//  FIREBASE CONFIG — substitui pelos teus dados reais
-//  firebase.google.com → Project Settings → Config
-// ═══════════════════════════════════════════════════════
-const FIREBASE_CONFIG = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-// ═══════════════════════════════════════════════════════
-//  MODO DEMO — dados locais, sem Firebase
-// ═══════════════════════════════════════════════════════
-let DEMO_MODE = false;
-let db = null;
-let auth = null;
-let currentUser = null;
-
-// LOCAL STORAGE (demo)
-function ls(key, val) {
-  if (val === undefined) {
-    try { return JSON.parse(localStorage.getItem('fisio_' + key) || 'null'); } catch { return null; }
-  }
-  localStorage.setItem('fisio_' + key, JSON.stringify(val));
-}
-
-// ═══════════════════════════════════════════════════════
-//  DEMO DATA
-// ═══════════════════════════════════════════════════════
-function initDemoData() {
-  if (ls('patients')) return; // already seeded
-  const today = new Date();
-  const fmt = d => d.toISOString().split('T')[0];
-
-  const patients = [
-    { id: 'p1', name: 'Maria Fernandes', dob: '1958-04-12', phone: '912 345 678', email: 'maria.fernandes@gmail.com', address: 'Rua das Flores 14, Loulé', diagnosis: 'Gonartrose bilateral', price: 40, notes: 'Hipertensa. Não forçar joelho direito.', createdAt: Date.now() },
-    { id: 'p2', name: 'António Sousa', dob: '1945-11-23', phone: '963 456 789', email: '', address: 'Av. da República 77, Faro', diagnosis: 'AVC — reabilitação motora', price: 45, notes: 'Hemiplegia esquerda. Sessões 3x por semana.', createdAt: Date.now() },
-    { id: 'p3', name: 'Carla Mendes', dob: '1980-07-30', phone: '926 789 012', email: 'carla.m@hotmail.com', address: 'Rua do Sol 5, Almancil', diagnosis: 'Lombalgia crónica', price: 38, notes: '', createdAt: Date.now() },
-    { id: 'p4', name: 'João Rodrigues', dob: '1972-02-14', phone: '915 222 333', email: '', address: 'Quinta do Lago, Almancil', diagnosis: 'Pós-operatório LCA', price: 50, notes: 'Atleta. Reabilitação acelerada.', createdAt: Date.now() }
-  ];
-
-  const d = (offset, h = 10, m = 0) => {
-    const dt = new Date(today);
-    dt.setDate(dt.getDate() + offset);
-    return { date: fmt(dt), time: `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}` };
-  };
-
-  const appointments = [
-    { id: 'a1', patientId: 'p1', ...d(-14, 10), address: 'Rua das Flores 14, Loulé', price: 40, duration: 60, notes: 'Exercícios de fortalecimento do quadricípes.', status: 'done', payment: { paid: true, method: 'dinheiro', amount: 40, date: fmt(new Date(today.getFullYear(), today.getMonth(), today.getDate()-14)) }, createdAt: Date.now()-1e6 },
-    { id: 'a2', patientId: 'p2', ...d(-10, 9), address: 'Av. da República 77, Faro', price: 45, duration: 60, notes: 'Trabalho de mobilidade do ombro esquerdo.', status: 'done', payment: { paid: true, method: 'mb_way', amount: 45, date: fmt(new Date(today.getFullYear(), today.getMonth(), today.getDate()-10)) }, createdAt: Date.now()-9e5 },
-    { id: 'a3', patientId: 'p3', ...d(-7, 11), address: 'Rua do Sol 5, Almancil', price: 38, duration: 45, notes: 'Mobilização lombar. Evolução positiva.', status: 'done', payment: { paid: false }, createdAt: Date.now()-8e5 },
-    { id: 'a4', patientId: 'p1', ...d(-3, 10), address: 'Rua das Flores 14, Loulé', price: 40, duration: 60, notes: 'Aumentar carga nos exercícios.', status: 'done', payment: { paid: false }, createdAt: Date.now()-7e5 },
-    { id: 'a5', patientId: 'p4', ...d(0, 9, 30), address: 'Quinta do Lago, Almancil', price: 50, duration: 60, notes: '', status: 'scheduled', payment: { paid: false }, createdAt: Date.now()-6e5 },
-    { id: 'a6', patientId: 'p2', ...d(0, 14), address: 'Av. da República 77, Faro', price: 45, duration: 60, notes: '', status: 'scheduled', payment: { paid: false }, createdAt: Date.now()-5e5 },
-    { id: 'a7', patientId: 'p3', ...d(2, 11), address: 'Rua do Sol 5, Almancil', price: 38, duration: 45, notes: '', status: 'scheduled', payment: { paid: false }, createdAt: Date.now()-4e5 },
-    { id: 'a8', patientId: 'p1', ...d(4, 10), address: 'Rua das Flores 14, Loulé', price: 40, duration: 60, notes: '', status: 'scheduled', payment: { paid: false }, createdAt: Date.now()-3e5 },
-    { id: 'a9', patientId: 'p4', ...d(7, 9, 30), address: 'Quinta do Lago, Almancil', price: 50, duration: 60, notes: '', status: 'scheduled', payment: { paid: false }, createdAt: Date.now()-2e5 },
-  ];
-
-  ls('patients', patients);
-  ls('appointments', appointments);
-}
-
-// ═══════════════════════════════════════════════════════
-//  CRUD HELPERS
-// ═══════════════════════════════════════════════════════
-function getPatients() { return ls('patients') || []; }
-function getAppointments() { return ls('appointments') || []; }
-
-function savePatients(list) { ls('patients', list); }
-function saveAppointments(list) { ls('appointments', list); }
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-// ═══════════════════════════════════════════════════════
-//  EXPOSE TO GLOBAL (called from onclick)
-// ═══════════════════════════════════════════════════════
-let _currentDetailPatientId = null;
-let _calYear, _calMonth;
-
-window.doLogin = async function() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const err = document.getElementById('login-error');
-  err.style.display = 'none';
-
-  if (!DEMO_MODE && db) {
-    try {
-      const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch(e) {
-      err.textContent = 'Email ou palavra-passe incorretos.';
-      err.style.display = 'block';
-    }
-  } else {
-    err.textContent = 'Firebase não configurado. Use o modo demo.';
-    err.style.display = 'block';
-  }
-};
-
-window.demoLogin = function() {
-  DEMO_MODE = true;
-  currentUser = { displayName: 'Demo Fisioterapeuta', email: 'demo@fisio.pt' };
-  initDemoData();
-  enterApp();
-};
-
-window.doLogout = function() {
-  if (!DEMO_MODE && auth) auth.signOut();
-  DEMO_MODE = false;
-  currentUser = null;
-  document.getElementById('screen-app').classList.remove('active');
-  document.getElementById('screen-login').classList.add('active');
-};
-
-window.toggleSidebar = function() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebar-overlay').classList.toggle('open');
-};
-
-window.closeSidebar = function() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('open');
-};
-
-window.showPage = function(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  const navItems = document.querySelectorAll('.nav-item');
-  const pages = ['dashboard','calendar','patients','appointments','payments'];
-  const idx = pages.indexOf(page);
-  if (idx >= 0) navItems[idx].classList.add('active');
-
-  if (page === 'dashboard') renderDashboard();
-  if (page === 'calendar') renderCalendar();
-  if (page === 'patients') renderPatients();
-  if (page === 'appointments') renderAppointments();
-  if (page === 'payments') renderPayments();
-
-  closeSidebar();
-};
-
-window.openModal = function(id) {
-  if (id === 'modal-appointment') {
-    document.getElementById('appt-edit-id').value = '';
-    document.getElementById('appt-modal-title').textContent = 'Nova consulta';
-    document.getElementById('appt-date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('appt-time').value = '09:00';
-    document.getElementById('appt-address').value = '';
-    document.getElementById('appt-price').value = '';
-    document.getElementById('appt-duration').value = '60';
-    document.getElementById('appt-notes').value = '';
-    document.getElementById('appt-status').value = 'scheduled';
-    populatePatientSelect();
-  }
-  if (id === 'modal-patient') {
-    document.getElementById('patient-edit-id').value = '';
-    document.getElementById('patient-modal-title').textContent = 'Novo paciente';
-    ['patient-name','patient-dob','patient-phone','patient-email','patient-address','patient-diagnosis','patient-price','patient-notes'].forEach(i => document.getElementById(i).value = '');
-  }
-  document.getElementById(id).classList.add('open');
-};
-
-window.closeModal = function(id) {
-  document.getElementById(id).classList.remove('open');
-};
-
-window.saveAppointment = function() {
-  const editId = document.getElementById('appt-edit-id').value;
-  const pid = document.getElementById('appt-patient').value;
-  if (!pid) { toast('Seleciona um paciente', 'error'); return; }
-  const date = document.getElementById('appt-date').value;
-  if (!date) { toast('Seleciona uma data', 'error'); return; }
-
-  const appt = {
-    id: editId || uid(),
-    patientId: pid,
-    date,
-    time: document.getElementById('appt-time').value,
-    address: document.getElementById('appt-address').value,
-    price: parseFloat(document.getElementById('appt-price').value) || 0,
-    duration: parseInt(document.getElementById('appt-duration').value) || 60,
-    notes: document.getElementById('appt-notes').value,
-    status: document.getElementById('appt-status').value,
-    payment: editId ? (getAppointments().find(a => a.id === editId)?.payment || { paid: false }) : { paid: false },
-    createdAt: editId ? (getAppointments().find(a => a.id === editId)?.createdAt || Date.now()) : Date.now()
-  };
-
-  const list = getAppointments();
-  if (editId) {
-    const idx = list.findIndex(a => a.id === editId);
-    if (idx >= 0) list[idx] = appt;
-  } else {
-    list.push(appt);
-  }
-  saveAppointments(list);
-  closeModal('modal-appointment');
-  toast(editId ? 'Consulta atualizada' : 'Consulta criada', 'success');
-  const activePage = document.querySelector('.page.active')?.id.replace('page-','');
-  if (activePage) window.showPage(activePage);
-};
-
-window.savePatient = function() {
-  const editId = document.getElementById('patient-edit-id').value;
-  const name = document.getElementById('patient-name').value.trim();
-  if (!name) { toast('Insere o nome do paciente', 'error'); return; }
-
-  const patient = {
-    id: editId || uid(),
-    name,
-    dob: document.getElementById('patient-dob').value,
-    phone: document.getElementById('patient-phone').value,
-    email: document.getElementById('patient-email').value,
-    address: document.getElementById('patient-address').value,
-    diagnosis: document.getElementById('patient-diagnosis').value,
-    price: parseFloat(document.getElementById('patient-price').value) || 0,
-    notes: document.getElementById('patient-notes').value,
-    createdAt: editId ? (getPatients().find(p => p.id === editId)?.createdAt || Date.now()) : Date.now()
-  };
-
-  const list = getPatients();
-  if (editId) {
-    const idx = list.findIndex(p => p.id === editId);
-    if (idx >= 0) list[idx] = patient;
-  } else {
-    list.push(patient);
-  }
-  savePatients(list);
-  closeModal('modal-patient');
-  toast(editId ? 'Paciente atualizado' : 'Paciente criado', 'success');
-  renderPatients();
-};
-
-window.filterPatients = function(q) {
-  renderPatients(q);
-};
-
-window.filterAppointments = function(val) {
-  renderAppointments(val);
-};
-
-window.openPatientDetail = function(patientId) {
-  _currentDetailPatientId = patientId;
-  const patients = getPatients();
-  const p = patients.find(x => x.id === patientId);
-  if (!p) return;
-
-  document.getElementById('detail-patient-name').textContent = p.name;
-
-  const appts = getAppointments().filter(a => a.patientId === patientId).sort((a, b) => b.date.localeCompare(a.date));
-  const age = p.dob ? Math.floor((Date.now() - new Date(p.dob)) / 31557600000) : '–';
-
-  let html = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-      <div><div class="card-title">Idade</div><div style="font-size:16px;font-weight:500">${age} anos</div></div>
-      <div><div class="card-title">Telemóvel</div><div style="font-size:15px">${p.phone || '–'}</div></div>
-      <div><div class="card-title">Diagnóstico</div><div style="font-size:14px;color:var(--muted2)">${p.diagnosis || '–'}</div></div>
-      <div><div class="card-title">Valor/sessão</div><div style="font-size:15px;font-family:var(--serif)">${p.price ? p.price+'€' : '–'}</div></div>
-      <div style="grid-column:1/-1"><div class="card-title">Morada</div><div style="font-size:14px;color:var(--muted2)">${p.address || '–'}</div></div>
-      ${p.notes ? `<div style="grid-column:1/-1"><div class="card-title">Notas</div><div style="font-size:13px;color:var(--muted2);background:var(--bg3);padding:10px 12px;border-radius:var(--r2)">${p.notes}</div></div>` : ''}
-    </div>
-    <div class="card-title" style="margin-bottom:10px">Histórico de consultas (${appts.length})</div>
-  `;
-
-  if (appts.length === 0) {
-    html += `<div class="empty"><p>Sem consultas registadas</p></div>`;
-  } else {
-    appts.slice(0, 6).forEach(a => {
-      const statusMap = { scheduled: ['badge-blue','Agendada'], done: ['badge-green','Realizada'], cancelled: ['badge-red','Cancelada'] };
-      const [cls, label] = statusMap[a.status] || ['badge-gray', a.status];
-      html += `
-        <div class="pay-row">
-          <div class="pay-info">
-            <div class="pay-patient">${fmtDate(a.date)} às ${a.time}</div>
-            <div class="pay-date">${a.address || '–'} · ${a.duration}min</div>
-          </div>
-          <span class="badge ${cls}">${label}</span>
-          <div class="pay-amount">${a.price}€</div>
-          <span class="badge ${a.payment?.paid ? 'badge-green' : 'badge-amber'}">${a.payment?.paid ? 'Pago' : 'Pendente'}</span>
-        </div>`;
-    });
-  }
-
-  document.getElementById('patient-detail-content').innerHTML = html;
-  openModal('modal-patient-detail');
-};
-
-window.editPatientFromDetail = function() {
-  closeModal('modal-patient-detail');
-  const p = getPatients().find(x => x.id === _currentDetailPatientId);
-  if (!p) return;
-  document.getElementById('patient-edit-id').value = p.id;
-  document.getElementById('patient-modal-title').textContent = 'Editar paciente';
-  document.getElementById('patient-name').value = p.name;
-  document.getElementById('patient-dob').value = p.dob || '';
-  document.getElementById('patient-phone').value = p.phone || '';
-  document.getElementById('patient-email').value = p.email || '';
-  document.getElementById('patient-address').value = p.address || '';
-  document.getElementById('patient-diagnosis').value = p.diagnosis || '';
-  document.getElementById('patient-price').value = p.price || '';
-  document.getElementById('patient-notes').value = p.notes || '';
-  openModal('modal-patient');
-};
-
-window.newApptForPatient = function() {
-  closeModal('modal-patient-detail');
-  openModal('modal-appointment');
-  document.getElementById('appt-patient').value = _currentDetailPatientId;
-};
-
-window.openPaymentModal = function(apptId) {
-  const a = getAppointments().find(x => x.id === apptId);
-  if (!a) return;
-  document.getElementById('pay-appt-id').value = apptId;
-  document.getElementById('pay-amount').value = a.price || '';
-  document.getElementById('pay-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('pay-notes').value = '';
-  document.getElementById('pay-method').value = 'mb_way';
-  openModal('modal-payment');
-};
-
-window.savePayment = function() {
-  const apptId = document.getElementById('pay-appt-id').value;
-  const method = document.getElementById('pay-method').value;
-  const amount = parseFloat(document.getElementById('pay-amount').value);
-  const date = document.getElementById('pay-date').value;
-
-  const list = getAppointments();
-  const idx = list.findIndex(a => a.id === apptId);
-  if (idx < 0) return;
-  list[idx].payment = { paid: true, method, amount, date, notes: document.getElementById('pay-notes').value };
-  saveAppointments(list);
-  closeModal('modal-payment');
-  toast('Pagamento registado ✓', 'success');
-  const activePage = document.querySelector('.page.active')?.id.replace('page-','');
-  if (activePage) window.showPage(activePage);
-};
-
-window.editAppointment = function(apptId) {
-  const a = getAppointments().find(x => x.id === apptId);
-  if (!a) return;
-  document.getElementById('appt-edit-id').value = a.id;
-  document.getElementById('appt-modal-title').textContent = 'Editar consulta';
-  populatePatientSelect(a.patientId);
-  document.getElementById('appt-date').value = a.date;
-  document.getElementById('appt-time').value = a.time;
-  document.getElementById('appt-address').value = a.address || '';
-  document.getElementById('appt-price').value = a.price || '';
-  document.getElementById('appt-duration').value = a.duration || 60;
-  document.getElementById('appt-notes').value = a.notes || '';
-  document.getElementById('appt-status').value = a.status;
-  openModal('modal-appointment');
-};
-
-window.calNav = function(dir) {
-  _calMonth += dir;
-  if (_calMonth > 11) { _calMonth = 0; _calYear++; }
-  if (_calMonth < 0) { _calMonth = 11; _calYear--; }
-  renderCalendar();
-};
-
-// ═══════════════════════════════════════════════════════
-//  RENDER FUNCTIONS
-// ═══════════════════════════════════════════════════════
-function fmtDate(d) {
-  if (!d) return '–';
-  const [y, m, day] = d.split('-');
-  return `${day}/${m}/${y}`;
-}
-
-function populatePatientSelect(selectedId) {
-  const sel = document.getElementById('appt-patient');
-  const patients = getPatients();
-  sel.innerHTML = '<option value="">Selecionar paciente...</option>' +
-    patients.map(p => `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${p.name}</option>`).join('');
-}
-
-function renderDashboard() {
-  const today = new Date().toISOString().split('T')[0];
-  const appts = getAppointments();
-  const patients = getPatients();
-
-  const todayAppts = appts.filter(a => a.date === today);
-  const now = new Date();
-  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
-  const weekEnd = new Date(now); weekEnd.setDate(now.getDate() - now.getDay() + 6);
-  const weekAppts = appts.filter(a => {
-    const d = new Date(a.date);
-    return d >= weekStart && d <= weekEnd;
-  });
-  const pendingPay = appts.filter(a => a.status === 'done' && !a.payment?.paid);
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthRevenue = appts.filter(a => a.payment?.paid && new Date(a.payment.date) >= monthStart)
-    .reduce((s, a) => s + (a.payment?.amount || 0), 0);
-
-  document.getElementById('stat-today').textContent = todayAppts.length;
-  document.getElementById('stat-week').textContent = weekAppts.length;
-  document.getElementById('stat-pending').textContent = pendingPay.length;
-  document.getElementById('stat-revenue').textContent = monthRevenue.toFixed(0) + '€';
-
-  const pt = n => patients.find(p => p.id === n?.patientId)?.name || 'Paciente';
-  const upcoming = appts.filter(a => a.status === 'scheduled' && a.date >= today)
-    .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time)).slice(0, 5);
-
-  const el = document.getElementById('dash-upcoming');
-  if (upcoming.length === 0) {
-    el.innerHTML = `<div class="empty" style="padding:24px 0"><p>Sem consultas agendadas</p></div>`;
-  } else {
-    el.innerHTML = upcoming.map(a => `
-      <div class="pay-row" style="cursor:pointer" onclick="editAppointment('${a.id}')">
-        <div class="pay-info">
-          <div class="pay-patient">${pt(a)}</div>
-          <div class="pay-date">${fmtDate(a.date)} · ${a.time} · ${a.duration || 60}min</div>
-        </div>
-        <div style="font-size:12px;color:var(--muted)">${a.price}€</div>
-      </div>`).join('');
-  }
-
-  const unpaid = document.getElementById('dash-unpaid');
-  if (pendingPay.length === 0) {
-    unpaid.innerHTML = `<div class="empty" style="padding:24px 0"><p>Sem pagamentos pendentes</p></div>`;
-  } else {
-    unpaid.innerHTML = pendingPay.slice(0, 5).map(a => `
-      <div class="pay-row">
-        <div class="pay-info">
-          <div class="pay-patient">${pt(a)}</div>
-          <div class="pay-date">${fmtDate(a.date)}</div>
-        </div>
-        <div class="pay-amount">${a.price}€</div>
-        <button class="btn btn-primary" style="padding:5px 10px;font-size:11px" onclick="openPaymentModal('${a.id}')">Registar</button>
-      </div>`).join('');
-  }
-
-  // Date
-  const days = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
-  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-  const d = new Date();
-  document.getElementById('dash-date').textContent = `${days[d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
-
-  // Username
-  const uname = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Fisioterapeuta';
-  document.getElementById('sidebar-username').textContent = uname;
-  document.querySelector('.page-title').textContent = `Bom ${d.getHours() < 12 ? 'dia' : d.getHours() < 18 ? 'tarde' : 'noite'} 👋`;
-}
-
-function renderCalendar() {
-  const now = new Date();
-  if (_calYear === undefined) { _calYear = now.getFullYear(); _calMonth = now.getMonth(); }
-
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  document.getElementById('cal-month-label').textContent = `${months[_calMonth]} ${_calYear}`;
-
-  const appts = getAppointments();
-  const patients = getPatients();
-  const first = new Date(_calYear, _calMonth, 1);
-  const last = new Date(_calYear, _calMonth + 1, 0);
-  const today = now.toISOString().split('T')[0];
-
-  let html = '';
-  let startDow = first.getDay();
-  // Previous month days
-  for (let i = 0; i < startDow; i++) {
-    const d = new Date(_calYear, _calMonth, -startDow + i + 1);
-    html += `<div class="cal-day other-month"><div class="cal-day-num">${d.getDate()}</div></div>`;
-  }
-  // Current month
-  for (let day = 1; day <= last.getDate(); day++) {
-    const dateStr = `${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const dayAppts = appts.filter(a => a.date === dateStr).sort((a,b) => a.time.localeCompare(b.time));
-    const isToday = dateStr === today;
-    const events = dayAppts.map(a => {
-      const pname = patients.find(p => p.id === a.patientId)?.name?.split(' ')[0] || '?';
-      const cls = a.status === 'cancelled' ? 'cancelled' : a.payment?.paid === false && a.status === 'done' ? 'pending' : '';
-      return `<div class="cal-event ${cls}" onclick="editAppointment('${a.id}')">${a.time} ${pname}</div>`;
-    }).join('');
-    html += `<div class="cal-day${isToday ? ' today' : ''}" onclick="calDayClick('${dateStr}')">
-      <div class="cal-day-num">${day}</div>
-      ${events}
-    </div>`;
-  }
-  // Next month fill
-  const totalCells = startDow + last.getDate();
-  const remaining = (7 - (totalCells % 7)) % 7;
-  for (let i = 1; i <= remaining; i++) {
-    html += `<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
-  }
-  document.getElementById('cal-days').innerHTML = html;
-}
-
-window.calDayClick = function(dateStr) {
-  openModal('modal-appointment');
-  document.getElementById('appt-date').value = dateStr;
-};
-
-function renderPatients(filter = '') {
-  const patients = getPatients().filter(p =>
-    !filter || p.name.toLowerCase().includes(filter.toLowerCase()) || (p.diagnosis || '').toLowerCase().includes(filter.toLowerCase())
-  );
-  document.getElementById('patients-count').textContent = `${patients.length} paciente${patients.length !== 1 ? 's' : ''}`;
-
-  if (patients.length === 0) {
-    document.getElementById('patients-grid').innerHTML = `<div class="empty" style="grid-column:1/-1"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><p>Sem pacientes${filter ? ' encontrados' : ''}.<br>Adiciona o primeiro paciente.</p></div>`;
-    return;
-  }
-
-  const appts = getAppointments();
-  document.getElementById('patients-grid').innerHTML = patients.map(p => {
-    const initials = p.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const pAppts = appts.filter(a => a.patientId === p.id);
-    const lastAppt = pAppts.filter(a => a.status === 'done').sort((a,b) => b.date.localeCompare(a.date))[0];
-    const nextAppt = pAppts.filter(a => a.status === 'scheduled').sort((a,b) => a.date.localeCompare(b.date))[0];
-    const unpaid = pAppts.filter(a => a.status === 'done' && !a.payment?.paid).reduce((s,a) => s + a.price, 0);
-    return `
-      <div class="patient-card" onclick="openPatientDetail('${p.id}')">
-        <div class="patient-avatar">${initials}</div>
-        <div class="patient-name">${p.name}</div>
-        <div class="patient-diag">${p.diagnosis || 'Sem diagnóstico'}</div>
-        <div class="patient-meta">
-          ${nextAppt ? `<span class="badge badge-blue">Próxima: ${fmtDate(nextAppt.date)}</span>` : ''}
-          ${unpaid > 0 ? `<span class="badge badge-amber">${unpaid}€ em dívida</span>` : ''}
-          ${pAppts.length > 0 ? `<span class="badge badge-gray">${pAppts.length} sess.</span>` : ''}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-function renderAppointments(filter = 'all') {
-  const patients = getPatients();
-  let appts = getAppointments().sort((a,b) => (b.date + b.time).localeCompare(a.date + a.time));
-  if (filter !== 'all') appts = appts.filter(a => a.status === filter);
-
-  const statusMap = { scheduled: ['badge-blue','Agendada'], done: ['badge-green','Realizada'], cancelled: ['badge-red','Cancelada'] };
-  const tbody = document.getElementById('appointments-body');
-
-  if (appts.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Sem consultas</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = appts.map(a => {
-    const p = patients.find(x => x.id === a.patientId);
-    const [sc, sl] = statusMap[a.status] || ['badge-gray', a.status];
-    const initials = (p?.name || '?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return `<tr>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="patient-avatar" style="width:30px;height:30px;font-size:11px;margin:0;flex-shrink:0">${initials}</div>
-          <span onclick="openPatientDetail('${a.patientId}')" style="cursor:pointer;font-weight:500">${p?.name || '?'}</span>
-        </div>
-      </td>
-      <td>${fmtDate(a.date)}</td>
-      <td>${a.time}</td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">${a.address || '–'}</td>
-      <td><span class="badge ${sc}">${sl}</span></td>
-      <td>${a.payment?.paid
-        ? `<span class="badge badge-green">${a.payment.method || 'Pago'}</span>`
-        : a.status === 'done' ? `<button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openPaymentModal('${a.id}')">Registar</button>` : `<span class="badge badge-gray">–</span>`
-      }</td>
-      <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="editAppointment('${a.id}')">Editar</button></td>
-    </tr>`;
-  }).join('');
-}
-
-function renderPayments() {
-  const appts = getAppointments();
-  const patients = getPatients();
-  const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const pt = a => patients.find(p => p.id === a.patientId)?.name || '?';
-
-  const received = appts.filter(a => a.payment?.paid && new Date(a.payment.date || a.date) >= monthStart);
-  const pendingList = appts.filter(a => a.status === 'done' && !a.payment?.paid).sort((a,b) => a.date.localeCompare(b.date));
-
-  document.getElementById('pay-received').textContent = received.reduce((s,a) => s + (a.payment?.amount || 0), 0).toFixed(0) + '€';
-  const totalPending = appts.filter(a => a.status === 'done' && !a.payment?.paid).reduce((s,a) => s + a.price, 0);
-  document.getElementById('pay-pending-amount').textContent = totalPending.toFixed(0) + '€';
-  document.getElementById('pay-sessions').textContent = appts.filter(a => a.payment?.paid).length;
-
-  const methodIcon = { dinheiro: '💵', mb_way: '📱', multibanco: '🏧', transferencia: '🏦' };
-
-  const pendEl = document.getElementById('payments-pending-list');
-  if (pendingList.length === 0) {
-    pendEl.innerHTML = `<div class="empty" style="padding:24px 0"><p>Sem pagamentos pendentes 🎉</p></div>`;
-  } else {
-    pendEl.innerHTML = pendingList.map(a => `
-      <div class="pay-row">
-        <div class="pay-info">
-          <div class="pay-patient">${pt(a)}</div>
-          <div class="pay-date">Sessão ${fmtDate(a.date)} · ${a.time}</div>
-        </div>
-        <div class="pay-amount">${a.price}€</div>
-        <div class="pay-actions">
-          <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" onclick="openPaymentModal('${a.id}')">Registar pagamento</button>
-        </div>
-      </div>`).join('');
-  }
-
-  const histEl = document.getElementById('payments-history-list');
-  const paid = appts.filter(a => a.payment?.paid).sort((a,b) => (b.payment?.date||b.date).localeCompare(a.payment?.date||a.date));
-  if (paid.length === 0) {
-    histEl.innerHTML = `<div class="empty" style="padding:24px 0"><p>Sem pagamentos registados</p></div>`;
-  } else {
-    histEl.innerHTML = paid.map(a => `
-      <div class="pay-row">
-        <div class="pay-info">
-          <div class="pay-patient">${pt(a)}</div>
-          <div class="pay-date">${fmtDate(a.payment?.date || a.date)} · ${methodIcon[a.payment?.method] || ''} ${a.payment?.method?.replace('_',' ') || 'Pago'}</div>
-        </div>
-        <div class="pay-amount" style="color:var(--accent)">${(a.payment?.amount || a.price).toFixed(0)}€</div>
-        <span class="badge badge-green">Pago</span>
-      </div>`).join('');
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════
-function toast(msg, type = 'success') {
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
-  el.innerHTML = `<span>${icons[type] || ''}</span> ${msg}`;
-  document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), 3500);
-}
-window.toast = toast;
-
-// ═══════════════════════════════════════════════════════
-//  APP ENTRY
-// ═══════════════════════════════════════════════════════
-function enterApp() {
-  document.getElementById('screen-login').classList.remove('active');
-  document.getElementById('screen-app').classList.add('active');
-  const uname = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Fisioterapeuta';
-  document.getElementById('sidebar-username').textContent = uname;
-  window.showPage('dashboard');
-}
-
-// ═══════════════════════════════════════════════════════
-//  FIREBASE INIT (optional — skip if no config)
-// ═══════════════════════════════════════════════════════
-async function initFirebase() {
-  if (FIREBASE_CONFIG.apiKey === 'YOUR_API_KEY') return; // skip demo
-  try {
-    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-    const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
-    const app = initializeApp(FIREBASE_CONFIG);
-    db = getFirestore(app);
-    auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      if (user) { currentUser = user; enterApp(); }
-    });
-  } catch(e) { console.warn('Firebase not available:', e); }
-}
-
-initFirebase();
-
-</script>
+<script src="firebase-config.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
