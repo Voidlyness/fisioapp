@@ -16,6 +16,7 @@ function getFirebaseLoginErrorMessage(error) {
     "auth/operation-not-allowed": "O login por Email/Password não está ativo no Firebase.",
     "auth/unauthorized-domain": "Este domínio não está autorizado no Firebase Authentication."
   };
+
   return messages[code] || `Erro Firebase: ${code}`;
 }
 
@@ -24,6 +25,7 @@ export async function doLogin() {
   const pass = document.getElementById("login-pass").value;
   const errorEl = document.getElementById("login-error");
   errorEl.style.display = "none";
+
   if (!state.auth) {
     errorEl.textContent = "Firebase não configurado. Usa o modo demo.";
     errorEl.style.display = "block";
@@ -63,6 +65,7 @@ export async function doLogout() {
 
 export async function initFirebase(FIREBASE_CONFIG) {
   if (!isFirebaseConfigured()) return;
+
   try {
     const [{ initializeApp }, firestoreModule, authModule] = await Promise.all([
       import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"),
@@ -74,6 +77,7 @@ export async function initFirebase(FIREBASE_CONFIG) {
     const app = initializeApp(FIREBASE_CONFIG);
     state.db = firestoreModule.getFirestore(app);
     state.auth = authModule.getAuth(app);
+
     authModule.onAuthStateChanged(state.auth, async user => {
       if (!user) return;
       state.demoMode = false;

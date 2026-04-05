@@ -45,4 +45,5 @@ document.addEventListener("DOMContentLoaded", () => {
     upcoming.innerHTML = `<div class="empty" style="padding:24px 0"><p>À espera de login ou modo demo</p></div>`;
   }
 });
+
 initFirebase(FIREBASE_CONFIG);

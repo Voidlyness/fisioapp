@@ -12,6 +12,7 @@ export function renderAppointments(filter = "all") {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Sem consultas</td></tr>`;
     return;
   }
+
   tbody.innerHTML = appts.map(item => {
     const name = getPatientName(item.patientId);
     const initials = name.split(" ").map(word => word[0]).join("").slice(0, 2).toUpperCase();
