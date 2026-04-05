@@ -78,3 +78,25 @@ export function editAppointment(apptId) {
   document.getElementById("appt-status").value = appointment.status;
   document.getElementById("modal-appointment").classList.add("open");
 }
+
+export async function deleteAppointment() {
+  const appointmentId = document.getElementById("appt-edit-id").value;
+  if (!appointmentId) return;
+
+  const appointment = getAppointments().find(item => item.id === appointmentId);
+  if (!appointment) return;
+
+  const patientName = getPatientName(appointment.patientId);
+  const message = `Queres mesmo eliminar a consulta de ${patientName} em ${fmtDate(appointment.date)} às ${appointment.time}?`;
+  if (!window.confirm(message)) return;
+
+  try {
+    await state.store.deleteAppointment(appointmentId);
+    closeModal("modal-appointment");
+    showPage(document.querySelector(".page.active")?.id.replace("page-", "") || "appointments");
+    toast("Consulta eliminada");
+  } catch (error) {
+    console.error(error);
+    toast("Não foi possível eliminar a consulta", "error");
+  }
+}

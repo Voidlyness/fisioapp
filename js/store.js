@@ -69,6 +69,11 @@ export function createLocalStore() {
       ls("appointments", appointments);
       state.patients = patients;
       state.appointments = appointments;
+    },
+    async deleteAppointment(appointmentId) {
+      const appointments = state.appointments.filter(item => item.id !== appointmentId);
+      ls("appointments", appointments);
+      state.appointments = appointments;
     }
   };
 }
@@ -122,6 +127,10 @@ export async function createFirestoreStore() {
       ]);
       state.patients = state.patients.filter(item => item.id !== patientId);
       state.appointments = state.appointments.filter(item => item.patientId !== patientId);
+    },
+    async deleteAppointment(appointmentId) {
+      await deleteDoc(doc(scopedCollection("appointments"), appointmentId));
+      state.appointments = state.appointments.filter(item => item.id !== appointmentId);
     }
   };
 }

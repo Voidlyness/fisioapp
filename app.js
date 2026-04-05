@@ -4,7 +4,7 @@ import { doLogin, demoLogin, doLogout, initFirebase } from "./js/auth.js";
 import { closeModal, closeSidebar, openModal, registerRenderers, showPage, toggleSidebar } from "./js/ui.js";
 import { renderDashboard } from "./js/modules/dashboard.js";
 import { calDayClick, calNav, renderCalendar } from "./js/modules/calendar.js";
-import { editAppointment, renderAppointments, saveAppointment } from "./js/modules/appointments.js";
+import { deleteAppointment, editAppointment, renderAppointments, saveAppointment } from "./js/modules/appointments.js";
 import { openPatientDetail, renderPatients, savePatient, editPatientFromDetail, newApptForPatient, deletePatientFromDetail } from "./js/modules/patients.js";
 import { openPaymentModal, renderPayments, savePayment } from "./js/modules/payments.js";
 
@@ -25,6 +25,7 @@ window.showPage = showPage;
 window.openModal = id => openModal(id, getPatients);
 window.closeModal = closeModal;
 window.saveAppointment = saveAppointment;
+window.deleteAppointment = deleteAppointment;
 window.savePatient = savePatient;
 window.savePayment = savePayment;
 window.filterPatients = renderPatients;
